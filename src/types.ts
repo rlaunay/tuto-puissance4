@@ -13,6 +13,11 @@ export enum PlayerColor {
   YELLOW = 'Y'
 }
 
+export type Position = {
+  x: number;
+  y: number;
+}
+
 export type Player = {
   id: string;
   name: string;

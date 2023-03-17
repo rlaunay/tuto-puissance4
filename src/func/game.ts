@@ -1,4 +1,4 @@
-import {GridState, PlayerColor} from "../types";
+import {GameContext, GridState, Player, PlayerColor} from "../types";
 
 export function freePosition(grid: GridState, x: number): number {
   for (let y = grid.length - 1; y >= 0; y--) {
@@ -24,7 +24,41 @@ export function winningPositions(grid: GridState, color: PlayerColor, x: number,
   }
 
   for (let direction of directions) {
+    let items = [position];
 
+    for (let forward of [1, -1]) {
+      for (let i = 1; i < size; i++) {
+        const x = position.x + (i * direction[0] * forward)
+        const y = position.y + (i * direction[1] * forward)
+        if (grid?.[y]?.[x] !== color) {
+          break;
+        }
+        items.push({ x, y })
+      }
+    }
+
+    if (items.length >= size) {
+      return items
+    }
   }
 
+  return []
+}
+
+export function currentPlayer(context: GameContext): Player {
+  const player = context.players.find(p => p.id === context.currentPlayer);
+  if (player === undefined) throw new Error('Impossible de trouver le joueur courant');
+  return player;
+}
+
+export function countEmptyCells(grid: GridState): number {
+  let count = 0
+  for (let row of grid) {
+    for (let cell of row) {
+      if (cell === "E") {
+        count++;
+      }
+    }
+  }
+  return count
 }
